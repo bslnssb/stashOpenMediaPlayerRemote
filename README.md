@@ -1,3 +1,20 @@
+<p align="center">
+  <b>English</b> ·
+  <a href="README.zh-CN.md">简体中文</a> ·
+  <a href="README.zh-TW.md">繁體中文</a> ·
+  <a href="README.ja.md">日本語</a> ·
+  <a href="README.ko.md">한국어</a> ·
+  <a href="README.ru.md">Русский</a> ·
+  <a href="README.de.md">Deutsch</a> ·
+  <a href="README.es.md">Español</a> ·
+  <a href="README.fr.md">Français</a> ·
+  <a href="README.pt.md">Português</a> ·
+  <a href="README.tr.md">Türkçe</a> ·
+  <a href="README.vi.md">Tiếng Việt</a> ·
+  <a href="README.th.md">ไทย</a> ·
+  <a href="README.el.md">Ελληνικά</a>
+</p>
+
 > **Unofficial fork — UTF-8 / zh-CN fix (2026-11-10).**
 > Fixes a 100%-reproducible backend crash on Windows with non-ASCII paths,
 > plus several silent frontend failures. Original project:
