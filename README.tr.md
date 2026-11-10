@@ -23,14 +23,14 @@
 
 ## Bu fork neyi düzeltiyor
 
-- Belirti: Windows'ta Stash kurulum yolu veya video yolu ASCII dışı karakterler içeriyorsa «Harici oynatıcıda aç» düğmesi hiçbir şey yapmaz ve günlükte `Invalid \escape` / `exit status 1` görünür.
-- Neden: Stash, eklentinin stdin akışına **geçerli UTF-8 JSON** yazar. Ancak Windows'taki Python bunu sistemin ANSI kod sayfasıyla (cp936 / cp932 / cp949 / cp1251 vb.) çözer: ASCII dışı karakterler bozulur ve `\\` ikilisinin bir karakterini yutar. Bunun sonucunda `json.loads` `Invalid \escape` hatası verir, süreç exit 1 ile biter ve oynatıcı hiç başlatılmaz.
-- Etki: **ASCII dışı yol içeren tüm Windows sistemleri** — yalnızca Çince yerelleştirilmiş sistemler değil.
-- Üç düzeltme: arka uç baytları doğrudan `sys.stdin.buffer.read().decode("utf-8")` ile okur; ön uç yolu aynı kaynaklı GraphQL `findScene(id){files{path}}` sorgusundan alır (DOM XPath yalnızca yedek olarak kalır); düğme `.scene-toolbar` öğesine sabitlenir ve MutationObserver eklenir; her hata görünür biçimde gösterilir, sessizce yutulmaz.
+- Belirti: Windows'ta Stash kurulum yolu veya video yolu ASCII dışı karakter içeriyorsa «Harici oynatıcıda aç» tıklandığında hiçbir şey olmuyor ve günlükte `Invalid \escape` / `exit status 1` görünüyor.
+- Neden: Stash, eklentinin stdin akışına **geçerli UTF-8 JSON** yazar. Ancak Windows'ta Python bunu sistemin ANSI kod sayfasıyla (cp936 / cp932 / cp949 / cp1251 vb.) çözer; ASCII dışı karakterler bozulur ve `\\` çiftindeki iki karakterden birini yutar. Bunun sonucunda `json.loads` `Invalid \escape` hatası verir, süreç exit 1 ile sonlanır ve oynatıcı hiç başlatılmaz.
+- Etki: **ASCII dışı yol içeren tüm Windows sistemleri**, yalnızca Çince ortamlar değil.
+- Üç düzeltme: arka uç baytları doğrudan `sys.stdin.buffer.read().decode("utf-8")` ile okur; ön uç yolu aynı kaynaklı GraphQL sorgusu `findScene(id){files{path}}` ile alır (DOM XPath yalnızca yedek yol); düğme `.scene-toolbar` öğesine sabitlenir ve MutationObserver kullanılır, her hata görünür biçimde gösterilir, artık sessizce başarısız olmaz.
 
 ## Kurulum
 
-Stash → Ayarlar → Eklentiler → Kaynak ekle bölümüne aşağıdaki URL'yi girin, **Stash Open Media Player Remote** (version 1.0.3) eklentisini kurun ve ardından tarayıcıda **Ctrl+F5** tuşlarına basın.
+Stash → Ayarlar → Eklentiler → Kaynak ekle, aşağıdaki URL'yi girin, **Stash Open Media Player Remote** (version 1.0.3) eklentisini kurun ve ardından tarayıcıda **Ctrl+F5** tuşlarına basın.
 
 ```text
 https://raw.githubusercontent.com/bslnssb/stashOpenMediaPlayerRemote/refs/heads/main/index.yml
@@ -38,12 +38,12 @@ https://raw.githubusercontent.com/bslnssb/stashOpenMediaPlayerRemote/refs/heads/
 
 ## Doğrulama
 
-Herhangi bir sahneyi açın, **varsayılan «Genel bakış / Overview» sekmesinde kalın** («Dosyalar» sekmesine geçmeyin), **Ctrl+F5** tuşlarına basın ve «Harici oynatıcı» düğmesine tıklayın → yerel oynatıcı açılmalıdır. Başarısız olursa sayfa somut hatayı gösterir.
+Herhangi bir sahneyi açın, **varsayılan «Genel bakış / Overview» sekmesinde kalın** («Dosyalar» sekmesine geçmeyin), **Ctrl+F5** tuşlarına basın ve «Harici oynatıcı» düğmesine tıklayın → yerel oynatıcı açılmalıdır. Başarısız olursa sayfa ilgili hatayı gösterir.
 
 ## Belgeler
 
 [Postmortem](docs/POSTMORTEM.md) · [Architecture](docs/ARCHITECTURE.md) · [Tasks](docs/TASKS.md) · [Evidence](docs/EVIDENCE.md)
 
-Bu belgeler yalnızca türetilmiş görünümlerdir; esas alınan `index.yml` ve bütünlük denetimidir.
+Bu belgeler yalnızca türetilmiş görünümlerdir; esas olan `index.yml` ve bütünlük denetimidir.
 
 > Tam İngilizce başvuru: [README.md](README.md)
