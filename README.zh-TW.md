@@ -133,6 +133,12 @@ Chromium 系瀏覽器每次開啟 `stashopenmediaplayerremote://` 都會問一�
 - 通訊協定小幫手支援 **Windows**（登錄檔）與 **Linux**（`xdg-mime`）。macOS 本機模式可用，但小幫手目前不由腳本安裝。
 - Docker / Unraid / NAS 部署必須用**遠端模式**加路徑對應。
 
+## 工程文件
+
+[復盤](docs/POSTMORTEM.md) · [架構](docs/ARCHITECTURE.md) · [任務](docs/TASKS.md) · [證據](docs/EVIDENCE.md) · [13 語言說明](docs/i18n.md)
+
+這些文件只是衍生視圖，機制以 `index.yml` 與完整性自檢為準。
+
 ## 授權與歸屬
 
 原始外掛作者：**MrArgparse** —— <https://github.com/MrArgparse/stashOpenMediaPlayerRemote>。上游儲存庫沒有 `LICENSE`，因此不對上游程式碼授予任何授權，本 fork 也不會代為重新授權。本 fork 新增內容以 CC0 1.0 提供，詳見 [NOTICE.md](NOTICE.md)。

@@ -155,6 +155,16 @@ Chromium 系浏览器每次打开 `stashopenmediaplayerremote://` 都会问一�
 
 这些文档只是派生视图，机制以 `index.yml` 与完整性自检为准。
 
+## 工程文档
+
+- [复盘](docs/POSTMORTEM.md) —— 根因、失效时间线、分层根因表、需求池。
+- [架构](docs/ARCHITECTURE.md) —— 模块地图、运行时 / 分发 / 门禁三条链路、契约。
+- [任务](docs/TASKS.md) —— WBS、依赖图、发布验收清单。
+- [证据](docs/EVIDENCE.md) —— 复现步骤与留证。
+- [13 语言说明](docs/i18n.md) —— 修复说明的多语言摘要。
+
+这些文档只是派生视图，机制以 `index.yml` 与完整性自检为准。
+
 ## 许可与归属
 
 原始插件作者：**MrArgparse** —— <https://github.com/MrArgparse/stashOpenMediaPlayerRemote>。上游仓库没有 `LICENSE`，因此不对上游代码授予任何许可，本 fork 也不会替它重新授权。本 fork 新增的内容以 CC0 1.0 提供，详见 [NOTICE.md](NOTICE.md)。
