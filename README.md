@@ -1,3 +1,10 @@
+> **Unofficial fork — UTF-8 / zh-CN fix (2026-11-10).**
+> Fixes a 100%-reproducible backend crash on Windows with non-ASCII paths,
+> plus several silent frontend failures. Original project:
+> https://github.com/MrArgparse/stashOpenMediaPlayerRemote
+> Chinese notes: [README.zh-CN.md](README.zh-CN.md) · License/credit: [NOTICE.md](NOTICE.md)
+> The upstream fix (no CJK-only changes) is in [patches/](patches/).
+
 # Stash Open Media Player Remote
 
 Open Stash scenes in an external media player such as SMPlayer, VLC, MPC-HC, MPV, and others.

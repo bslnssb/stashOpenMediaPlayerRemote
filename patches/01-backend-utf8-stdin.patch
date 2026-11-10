@@ -1,0 +1,82 @@
+diff --git a/src/stashOpenMediaPlayerRemote.py b/src/stashOpenMediaPlayerRemote.py
+index 182dadc..544dd31 100644
+--- a/src/stashOpenMediaPlayerRemote.py
++++ b/src/stashOpenMediaPlayerRemote.py
+@@ -4,28 +4,59 @@ import sys
+ import subprocess
+ import os
+ 
+-json_input = json.loads(sys.stdin.read())
+-name = json_input['args']['name']
+-log.info(json.dumps(json_input, indent=2))
++
++def read_plugin_input():
++    """Read Stash's plugin input JSON as UTF-8, independent of the OS code page.
++
++    Stash writes UTF-8 JSON to the plugin's stdin. On Windows, however,
++    sys.stdin.read() decodes using the system ANSI code page (cp936 on a
++    Chinese locale, cp1252 on many Western ones). When a path contains
++    non-ASCII characters, the UTF-8 bytes are decoded incorrectly; worse, the
++    trailing byte of a multi-byte character can be consumed together with the
++    following backslash as one double-byte character. That turns a correctly
++    escaped path separator into a lone backslash and makes json.loads fail
++    with "Invalid \\escape", so the plugin exits before launching anything.
++
++    Reading the raw bytes and decoding them explicitly avoids the locale.
++    """
++    raw = sys.stdin.buffer.read().decode("utf-8", errors="replace")
++    return json.loads(raw)
++
++
++json_input = read_plugin_input()
++args = json_input.get("args", {}) or {}
++name = args.get("name", "mediaplayer")
++
++# Only log args. The original logged the whole server_connection object,
++# which contains the session cookie and other credentials.
++log.info(json.dumps({"args": args}, indent=2, ensure_ascii=False))
+ 
+ if name == 'mediaplayer':
+-    mediaplayer_path = json_input['args']['mediaPlayerPath']
+-    path = json_input['args']['path']
+-    # Handle fileUrlPrefixMode default
+-    file_url_prefix_mode = json_input['args'].get('fileUrlPrefixMode')
++    mediaplayer_path = args.get("mediaPlayerPath", "") or ""
++    path = args.get("path", "") or ""
++    file_url_prefix_mode = args.get("fileUrlPrefixMode")
+ 
+     if file_url_prefix_mode is None or file_url_prefix_mode == 'undefined':
+         file_url_prefix_mode = 'auto'
+-        
++
+     log.debug(f"mediaplayer_path: {mediaplayer_path}")
+     log.debug(f"fileUrlPrefixMode: {file_url_prefix_mode}")
+     log.debug(f"{name}: {path}")
+-    
++
++    if not mediaplayer_path or not path:
++        log.error(
++            f"Missing player or media path: player={mediaplayer_path!r} path={path!r}"
++        )
++        sys.exit(1)
++
+     # Check if media player path exists
+     if not os.path.exists(mediaplayer_path):
+         log.warning(f"Media player not found at: {mediaplayer_path}")
+-        log.info("If running Stash in a Docker container, ensure the media player path is valid in the container environment, or use a remote playback method.")
+-    
++        log.info(
++            "If running Stash in a Docker container, ensure the media player path is valid "
++            "in the container environment, or use a remote playback method."
++        )
++
+     try:
+         log.debug(f"Attempting to launch: {mediaplayer_path} {path}")
+         subprocess.Popen([mediaplayer_path, path])
+@@ -35,4 +66,4 @@ if name == 'mediaplayer':
+     except OSError as e:
+         log.error(f"Failed to launch media player: {e}")
+     except Exception as e:
+-        log.error(f"Unexpected error launching media player: {e}")
+\ No newline at end of file
++        log.error(f"Unexpected error launching media player: {e}")

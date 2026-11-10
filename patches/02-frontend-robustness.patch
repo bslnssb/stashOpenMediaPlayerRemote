@@ -1,0 +1,237 @@
+diff --git a/src/stashOpenMediaPlayerRemote.js b/src/stashOpenMediaPlayerRemote.js
+index 2eb2167..7474204 100644
+--- a/src/stashOpenMediaPlayerRemote.js
++++ b/src/stashOpenMediaPlayerRemote.js
+@@ -168,17 +168,28 @@
+     }
+ 
+     async function openMediaPlayerTask(path) {
+-        const configResult =
+-            await PluginApi.utils.StashService
+-                .getClient()
+-                .query({
+-                    query:
+-                        PluginApi.GQL.ConfigurationDocument,
+-                    fetchPolicy: "network-only"
+-                });
+-            
++        let configResult = null;
++
++        // A failed configuration query must not silently kill the click:
++        // an uncaught rejection in an async handler leaves no feedback.
++        try {
++            configResult =
++                await PluginApi.utils.StashService
++                    .getClient()
++                    .query({
++                        query:
++                            PluginApi.GQL.ConfigurationDocument,
++                        fetchPolicy: "network-only"
++                    });
++        } catch (err) {
++            console.warn(
++                '[ExternalPlayer] configuration query failed:',
++                err
++            );
++        }
++
+         const plugins =
+-            configResult.data.configuration.plugins;
++            configResult?.data?.configuration?.plugins || {};
+ 
+         const settings = {
+             ...(plugins.stashOpenMediaPlayer || {}),
+@@ -295,6 +306,8 @@
+                 plugin_id: "stashOpenMediaPlayerRemote",
+                 task_name: "Open in Media Player",
+                 args_map: {
++                    // Pass name explicitly instead of relying on defaultArgs merge
++                    name: "mediaplayer",
+                     path: filePath,
+                     mediaPlayerPath: mediaPlayerPath
+                 }
+@@ -308,13 +321,21 @@
+     function getSceneFilePath() {
+         const dd =
+             getElementByXpath(
+-                "//dt[text()='Path']/following-sibling::dd"
++                "//dt[(contains(text(),'Path') or contains(text(),'路径'))]/following-sibling::dd"
+             );
+ 
+         if (!dd) {
+             return null;
+         }
+ 
++        // Prefer plain text: link.href URL-encodes non-ASCII/special characters
++        const text =
++            dd.textContent?.trim();
++
++        if (text) {
++            return text;
++        }
++
+         const link = dd.querySelector("a");
+ 
+         if (link) {
+@@ -332,10 +353,79 @@
+             );
+         }
+ 
+-        const text =
+-            dd.textContent?.trim();
++        return null;
++    }
++
++    // Resolve the path via GraphQL so it works regardless of the active tab.
++    // Same-origin request carries the session cookie; no ApiKey needed.
++    async function fetchSceneFilePath() {
++        const match =
++            location.pathname.match(/\/scenes\/(\d+)/);
++
++        if (!match) {
++            return null;
++        }
++
++        try {
++            const res = await fetch('/graphql', {
++                method: 'POST',
++                credentials: 'same-origin',
++                headers: {
++                    'Content-Type': 'application/json'
++                },
++                body: JSON.stringify({
++                    query:
++                        'query($id:ID!){findScene(id:$id){files{path}}}',
++                    variables: { id: match[1] }
++                })
++            });
++
++            if (!res.ok) {
++                console.warn(
++                    '[ExternalPlayer] findScene returned',
++                    res.status
++                );
++                return null;
++            }
++
++            const json = await res.json();
++            const files =
++                json?.data?.findScene?.files || [];
++
++            return files.length ? files[0].path : null;
++        } catch (err) {
++            console.warn(
++                '[ExternalPlayer] findScene failed:',
++                err
++            );
++            return null;
++        }
++    }
++
++    // Surface failures instead of leaving the user with a button that does nothing.
++    function notify(message, isError) {
++        try {
++            const toast = window.PluginApi?.utils?.Toast;
++
++            if (toast) {
++                if (isError && toast.error) {
++                    toast.error(message);
++                    return;
++                }
++                if (!isError && toast.success) {
++                    toast.success(message);
++                    return;
++                }
++            }
++        } catch (e) {
++            // ignore, fall through
++        }
+ 
+-        return text || null;
++        if (isError) {
++            window.alert(message);
++        } else {
++            console.log('[ExternalPlayer]', message);
++        }
+     }
+ 
+     function ensureMediaPlayerToolbarButton() {
+@@ -372,14 +462,34 @@
+             async function (e) {
+                 e.preventDefault();
+ 
+-                const path =
+-                    getSceneFilePath();
+-
+-                if (!path) {
+-                    return;
++                try {
++                    // Prefer GraphQL; DOM XPath is only a fallback
++                    let path = await fetchSceneFilePath();
++
++                    if (!path) {
++                        path = getSceneFilePath();
++                    }
++
++                    if (!path) {
++                        notify(
++                            'External player: could not resolve the scene file path. '
++                            + 'Make sure you are logged in to Stash, or open the '
++                            + 'File Info tab and retry (see browser console).',
++                            true
++                        );
++                        return;
++                    }
++
++                    await openMediaPlayerTask(path);
++                    notify('External player launch requested', false);
++                } catch (err) {
++                    console.error('[ExternalPlayer]', err);
++                    notify(
++                        'Failed to open external player: ' +
++                        (err?.message || String(err)),
++                        true
++                    );
+                 }
+-
+-                await openMediaPlayerTask(path);
+             }
+         );
+ 
+@@ -422,12 +532,31 @@
+         }, 100);
+     }
+ 
++    // The button used to be injected only when .scene-file-info appeared, so
++    // it could be missing entirely on other tabs or after an SPA navigation.
++    // Wait for .scene-toolbar and observe the DOM so the button survives
++    // tab switches and toolbar re-renders.
++    function ensureButtonOnScenePage() {
++        if (!location.pathname.startsWith('/scenes/')) {
++            return;
++        }
++
++        ensureMediaPlayerToolbarButton();
++    }
++
++    const domObserver = new MutationObserver(() => {
++        ensureButtonOnScenePage();
++    });
++
++    domObserver.observe(document.body, {
++        childList: true,
++        subtree: true
++    });
++
+     watchSceneChanges();
+ 
+     waitForElementClass(
+-        'scene-file-info',
+-        function () {
+-            ensureMediaPlayerToolbarButton();
+-        }
++        'scene-toolbar',
++        ensureButtonOnScenePage
+     );
+ })();
+\ No newline at end of file

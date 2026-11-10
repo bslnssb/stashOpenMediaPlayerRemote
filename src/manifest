@@ -1,0 +1,18 @@
+id: stashOpenMediaPlayerRemote
+name: Stash Open Media Player Remote
+metadata:
+  description: Open scene filepath links in an external media player using local paths
+    or remote protocol handlers (unofficial UTF-8 / zh-CN fix)
+version: 1.0.3
+date: "2026-11-10 00:00:00"
+requires: []
+source_repository: https://raw.githubusercontent.com/bslnssb/stashOpenMediaPlayerRemote/refs/heads/main/index.yml
+files:
+- install-stashOpenMediaPlayerRemote.py
+- log.py
+- manifest
+- stashOpenMediaPlayerRemote.js
+- stashOpenMediaPlayerRemote.py
+- stashOpenMediaPlayerRemote.yml
+- stashOpenMediaPlayerRemoteClient.py
+- uninstall-stashOpenMediaPlayerRemote.py
