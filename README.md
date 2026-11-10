@@ -6,6 +6,22 @@
 > The upstream fix (no CJK-only changes) is in [patches/](patches/).
 > Notes in 13 languages: [docs/i18n.md](docs/i18n.md)
 
+## Documentation
+
+Engineering notes for this fork (unofficial UTF-8 / non-ASCII path fix, version 1.0.3):
+
+- [Postmortem](docs/POSTMORTEM.md) — root cause, failure timeline, layered cause table, R01–R16 requirement pool, open questions, and the architect hand-off.
+- [Architecture](docs/ARCHITECTURE.md) — module map, three Mermaid flows, key contracts, ten conventions, and points to clarify.
+- [Tasks](docs/TASKS.md) — T01–T19 WBS, dependency graph, and the release acceptance checklist.
+- [Evidence](docs/EVIDENCE.md) — reproduction steps and captured evidence of the original crash.
+- [Notes in 13 languages](docs/i18n.md) — translated summaries of the fix.
+
+These docs are derived views; index.yml and the integrity checks are the source of truth.
+
+Package source for this fork — use this URL in Stash, not the upstream v1.0.2 one:
+
+`https://raw.githubusercontent.com/bslnssb/stashOpenMediaPlayerRemote/refs/heads/main/index.yml`
+
 # Stash Open Media Player Remote
 
 Open Stash scenes in an external media player such as SMPlayer, VLC, MPC-HC, MPV, and others.
@@ -28,11 +44,11 @@ Name:
 stashOpenMediaPlayerRemote
 
 URL:
-https://raw.githubusercontent.com/MrArgparse/stashOpenMediaPlayerRemote/refs/heads/main/index.yml
+https://raw.githubusercontent.com/bslnssb/stashOpenMediaPlayerRemote/refs/heads/main/index.yml
 ```
 
 
-![alt text](https://raw.githubusercontent.com/MrArgparse/stashOpenMediaPlayerRemote/refs/heads/main/images/add-source.jpg)
+![alt text](images/add-source.jpg)
 
 ---
 
@@ -40,7 +56,7 @@ https://raw.githubusercontent.com/MrArgparse/stashOpenMediaPlayerRemote/refs/hea
 
 Install **Stash Open Media Player Remote** from the package source.
 
-![alt text](https://raw.githubusercontent.com/MrArgparse/stashOpenMediaPlayerRemote/refs/heads/main/images/install-plugin.jpg)
+![alt text](images/install-plugin.jpg)
 
 ---
 
@@ -61,7 +77,7 @@ Navigate to the plugin folder and run:
 python install-stashOpenMediaPlayerRemote.py
 ```
 
-![alt text](https://raw.githubusercontent.com/MrArgparse/stashOpenMediaPlayerRemote/refs/heads/main/images/install-protocol.jpg)
+![alt text](images/install-protocol.jpg)
 
 ---
 
@@ -86,7 +102,7 @@ Increment Play Count:
 Enabled
 ```
 
-![alt text](https://raw.githubusercontent.com/MrArgparse/stashOpenMediaPlayerRemote/refs/heads/main/images/plugin-config.jpg)
+![alt text](images/plugin-config.jpg)
 
 ## Local Mode
 

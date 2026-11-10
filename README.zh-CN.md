@@ -4,6 +4,22 @@
 > 本 fork 只做缺陷修复与说明，**不是新插件、不是竞品**。上游合并修复后，建议改回上游源。
 > 许可与归属见 [NOTICE.md](NOTICE.md)；给上游的通用补丁见 [patches/](patches/)。
 
+## 工程文档
+
+本 fork 的工程说明（非官方 UTF-8 / 非 ASCII 路径修复版，version 1.0.3）：
+
+- [复盘](docs/POSTMORTEM.md) — 根因、失效时间线、分层根因表、R01–R16 需求池、待确认问题与给架构师的交接提示。
+- [架构](docs/ARCHITECTURE.md) — 模块地图、3 条链路 Mermaid 图、关键契约、10 条约定与待明确事项。
+- [任务](docs/TASKS.md) — T01–T19 WBS、依赖图与发布验收清单。
+- [证据](docs/EVIDENCE.md) — 原始崩溃的复现步骤与留证。
+- [13 语言说明](docs/i18n.md) — 修复说明的多语言摘要。
+
+**这些文档只是派生视图，机制以 `index.yml` 与完整性自检（校验脚本）为准。**
+
+在 Stash 中添加本 fork 作为插件源（**不要**再使用上游 v1.0.2 的源地址）：
+
+`https://raw.githubusercontent.com/bslnssb/stashOpenMediaPlayerRemote/refs/heads/main/index.yml`
+
 ## 这个 fork 修了什么
 
 ### 1. 致命问题：按钮点了完全没反应（100% 必现）
@@ -56,6 +72,8 @@ Stash → 设置 → 插件 → 添加源，填：
 URL：
 https://raw.githubusercontent.com/bslnssb/stashOpenMediaPlayerRemote/refs/heads/main/index.yml
 ```
+
+> 该源地址必须与仓库根目录的 [index.yml](index.yml) 绑定一致；其由来见 [复盘](docs/POSTMORTEM.md)，发布前请按 [发布验收清单](docs/TASKS.md) 逐项核对。文档只是派生视图，机制以 `index.yml` 与完整性自检为准。
 
 然后安装 **Stash Open Media Player Remote**。
 
