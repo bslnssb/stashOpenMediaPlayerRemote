@@ -23,6 +23,10 @@
 
 Her sahne sayfasının araç çubuğuna **Harici oynatıcıda aç** düğmesi eklenir. Tek tıkla sahnenin gerçek dosya yolu bilgisayarınızdaki oynatıcıya gönderilir.
 
+![Sahne araç çubuğundaki yeni düğme](images/button-location.png)
+
+*Sahne araç çubuğu: yeni düğme oynatma sayacının hemen solunda.*
+
 - **Tek tık, düğme her zaman görünür** — sahne araç çubuğunda oynatma sayacının yanında durur; «Dosyalar» sekmesini açmanız gerekmez.
 - **Her oynatıcı** — «exe + dosya yolu» ile başlatılabilen her şey: VLC, MPV, MPC-HC/BE, SMPlayer, PotPlayer… Yalnızca oynatıcının tam yolunu girmeniz yeterli.
 - **Yerel mod** — Stash ve oynatıcı aynı bilgisayarda: oynatıcıyı Stash sunucusu başlatır.

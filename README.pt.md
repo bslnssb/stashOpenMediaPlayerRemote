@@ -23,6 +23,10 @@
 
 Cada página de cena ganha um botão **Abrir no player externo** na barra de ferramentas. Um clique envia o caminho real do arquivo da cena para o player do seu computador.
 
+![O botão novo na barra da cena](images/button-location.png)
+
+*A barra de ferramentas da cena: o botão novo fica logo à esquerda do contador.*
+
 - **Um clique, botão sempre visível** — fica na barra de ferramentas da cena, ao lado do contador de reproduções; não é preciso abrir a aba «Arquivos».
 - **Qualquer player** — qualquer um que inicie como «executável + caminho do arquivo»: VLC, MPV, MPC-HC/BE, SMPlayer, PotPlayer… Basta informar o caminho completo do executável.
 - **Modo local** — Stash e player no mesmo computador: o servidor do Stash inicia o player.

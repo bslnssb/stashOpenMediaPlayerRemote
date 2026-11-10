@@ -23,6 +23,10 @@
 
 Chaque page de scène reçoit un bouton **Ouvrir dans un lecteur externe** dans sa barre d'outils. Un clic envoie le chemin réel du fichier de la scène au lecteur installé sur votre machine.
 
+![Le nouveau bouton dans la barre de la scène](images/button-location.png)
+
+*La barre d'outils de la scène : le nouveau bouton se trouve juste à gauche du compteur.*
+
 - **Un clic, bouton toujours présent** — il se trouve dans la barre d'outils de la scène, à côté du compteur de lectures ; inutile d'ouvrir l'onglet « Fichiers ».
 - **N'importe quel lecteur** — tout ce qui se lance en « exécutable + chemin de fichier » : VLC, MPV, MPC-HC/BE, SMPlayer, PotPlayer, etc. Il suffit d'indiquer le chemin complet de l'exécutable.
 - **Mode local** — Stash et le lecteur sur la même machine : le serveur Stash lance le lecteur lui-même.

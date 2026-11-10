@@ -23,6 +23,10 @@
 
 Every scene page gets an **Open in external player** button in its toolbar. One click sends that scene's real file path to your desktop media player.
 
+![The new button in the scene toolbar](images/button-location.png)
+
+*The scene toolbar: the new button sits just left of the play count.*
+
 - **One click, always there** — the button sits in the scene toolbar next to the play-count control, on any scene page, without first opening the *Files* tab.
 - **Any player** — anything that accepts "executable + file path" on the command line: VLC, MPV, MPC-HC/BE, SMPlayer, PotPlayer, … You only provide the full path to the player's executable.
 - **Local mode** — Stash and the player run on the same computer: the Stash server launches the player itself.

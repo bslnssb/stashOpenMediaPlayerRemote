@@ -23,6 +23,10 @@
 
 Jede Szenen-Seite bekommt in der Werkzeugleiste eine Schaltfläche **Im externen Player öffnen**. Ein Klick schickt den echten Dateipfad dieser Szene an deinen Player.
 
+![Die neue Schaltfläche in der Szenen-Werkzeugleiste](images/button-location.png)
+
+*Die Szenen-Werkzeugleiste: die neue Schaltfläche sitzt direkt links vom Zähler.*
+
 - **Ein Klick, immer sichtbar** — die Schaltfläche sitzt neben dem Zähler in der Szenen-Werkzeugleiste; der Tab „Dateien" muss nicht geöffnet werden.
 - **Beliebiger Player** — alles, was sich als „EXE + Dateipfad" starten lässt: VLC, MPV, MPC-HC/BE, SMPlayer, PotPlayer und andere. Du gibst nur den vollständigen Pfad zur EXE an.
 - **Lokaler Modus** — Stash und Player auf demselben Rechner: der Stash-Server startet den Player selbst.

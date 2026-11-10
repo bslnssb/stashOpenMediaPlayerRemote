@@ -23,6 +23,10 @@
 
 Cada página de escena recibe un botón **Abrir en reproductor externo** en su barra de herramientas. Al pulsarlo, la ruta real del archivo de esa escena se envía al reproductor de tu equipo.
 
+![El botón nuevo en la barra de la escena](images/button-location.png)
+
+*La barra de herramientas de la escena: el botón nuevo queda justo a la izquierda del contador.*
+
 - **Un clic y el botón siempre visible** — está en la barra de herramientas de la escena, junto al contador de reproducciones; no hace falta abrir la pestaña «Archivos».
 - **Cualquier reproductor** — sirve cualquiera que se pueda lanzar como «ejecutable + ruta de archivo»: VLC, MPV, MPC-HC/BE, SMPlayer, PotPlayer… Solo hay que indicar la ruta completa del ejecutable.
 - **Modo local** — Stash y el reproductor en el mismo equipo: el servidor de Stash lanza el reproductor directamente.

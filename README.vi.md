@@ -23,6 +23,10 @@
 
 Mỗi trang cảnh (scene) có thêm nút **Mở bằng trình phát ngoài** trên thanh công cụ. Nhấp một lần, đường dẫn tệp thật của cảnh được gửi tới trình phát trên máy bạn.
 
+![Nút mới trên thanh công cụ của cảnh](images/button-location.png)
+
+*Thanh công cụ của cảnh: nút mới nằm ngay bên trái nút đếm lượt xem.*
+
 - **Một cú nhấp, nút luôn hiện** — nút nằm trên thanh công cụ của cảnh, cạnh nút đếm lượt xem; không cần mở tab «Tệp».
 - **Trình phát nào cũng được** — miễn là chạy được theo dạng «tệp thực thi + đường dẫn tệp»: VLC, MPV, MPC-HC/BE, SMPlayer, PotPlayer… Bạn chỉ cần nhập đường dẫn đầy đủ tới tệp exe.
 - **Chế độ cục bộ** — Stash và trình phát trên cùng một máy: máy chủ Stash tự khởi chạy trình phát.
