@@ -92,6 +92,32 @@ def read_plugin_input():
 | Working tab | Details tab (no need to expand File Info) |
 | Failure feedback | visible toast / alert instead of silence |
 
+### 5.1 Locale matrix (why this is not a Chinese-only bug)
+
+`docs/reproduce_locales.py` builds the same valid UTF-8 JSON with a localised
+install directory and media path, then decodes it with each Windows ANSI code
+page (what `sys.stdin.read()` does) versus plain UTF-8. It uses synthetic paths
+only, contains no machine-specific data, and can be run standalone with Python.
+
+| Locale | ANSI code page | `sys.stdin.read()` | UTF-8 byte read |
+|---|---|---|---|
+| English, ASCII only | cp1252 | OK | OK |
+| Simplified Chinese | cp936 | `Invalid \escape` | OK |
+| Traditional Chinese | cp950 | `Invalid \escape` | OK |
+| Japanese | cp932 | mojibake, path corrupted | OK |
+| Korean | cp949 | mojibake, path corrupted | OK |
+| Russian | cp1251 | mojibake, path corrupted | OK |
+| German / Spanish / French / Portuguese | cp1252 | mojibake, path corrupted | OK |
+| Turkish | cp1254 | mojibake, path corrupted | OK |
+| Vietnamese | cp1258 | mojibake, path corrupted | OK |
+| Thai | cp874 | mojibake, path corrupted | OK |
+| Greek | cp1253 | mojibake, path corrupted | OK |
+
+**13 of 14 locales fail with the old code; 14 of 14 pass with the UTF-8 byte
+read.** A corrupted path is as fatal as a parse error: the player is launched
+with a path that no longer exists. Per-language notes for affected users are
+in [`docs/i18n.md`](i18n.md).
+
 ## 6. Independent reproduction (no plugin changes needed)
 
 On a Chinese-locale Windows, put Stash in a directory containing CJK

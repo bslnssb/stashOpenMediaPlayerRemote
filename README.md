@@ -4,6 +4,7 @@
 > https://github.com/MrArgparse/stashOpenMediaPlayerRemote
 > Chinese notes: [README.zh-CN.md](README.zh-CN.md) · License/credit: [NOTICE.md](NOTICE.md)
 > The upstream fix (no CJK-only changes) is in [patches/](patches/).
+> Notes in 13 languages: [docs/i18n.md](docs/i18n.md)
 
 # Stash Open Media Player Remote
 
