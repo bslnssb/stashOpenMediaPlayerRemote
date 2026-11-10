@@ -1,11 +1,11 @@
-<p align="center">
+<p align="center" translate="no">
   <b>English</b> ·
   <a href="README.zh-CN.md">简体中文</a> ·
   <a href="README.zh-TW.md">繁體中文</a> ·
   <a href="README.ja.md">日本語</a> ·
   <a href="README.ko.md">한국어</a> ·
   <a href="README.ru.md">Русский</a> ·
-  <a href="README.de.md">Deutsch</a> ·
+  <a href="README.de.md">Deutsch</a><br>
   <a href="README.es.md">Español</a> ·
   <a href="README.fr.md">Français</a> ·
   <a href="README.pt.md">Português</a> ·
@@ -15,46 +15,29 @@
   <a href="README.el.md">Ελληνικά</a>
 </p>
 
-> **Unofficial fork — UTF-8 / zh-CN fix (2026-11-10).**
-> Fixes a 100%-reproducible backend crash on Windows with non-ASCII paths,
-> plus several silent frontend failures. Original project:
-> https://github.com/MrArgparse/stashOpenMediaPlayerRemote
-> Chinese notes: [README.zh-CN.md](README.zh-CN.md) · License/credit: [NOTICE.md](NOTICE.md)
-> The upstream fix (no CJK-only changes) is in [patches/](patches/).
-> Notes in 13 languages: [docs/i18n.md](docs/i18n.md)
-
-## Documentation
-
-Engineering notes for this fork (unofficial UTF-8 / non-ASCII path fix, version 1.0.3):
-
-- [Postmortem](docs/POSTMORTEM.md) — root cause, failure timeline, layered cause table, R01–R16 requirement pool, open questions, and the architect hand-off.
-- [Architecture](docs/ARCHITECTURE.md) — module map, three Mermaid flows, key contracts, ten conventions, and points to clarify.
-- [Tasks](docs/TASKS.md) — T01–T19 WBS, dependency graph, and the release acceptance checklist.
-- [Evidence](docs/EVIDENCE.md) — reproduction steps and captured evidence of the original crash.
-- [Notes in 13 languages](docs/i18n.md) — translated summaries of the fix.
-
-These docs are derived views; index.yml and the integrity checks are the source of truth.
-
-Package source for this fork — use this URL in Stash, not the upstream v1.0.2 one:
-
-`https://raw.githubusercontent.com/bslnssb/stashOpenMediaPlayerRemote/refs/heads/main/index.yml`
-
 # Stash Open Media Player Remote
 
-Open Stash scenes in an external media player such as SMPlayer, VLC, MPC-HC, MPV, and others.
+**Open a Stash scene in the player you already use — VLC, MPV, MPC-HC, SMPlayer, PotPlayer — with one click. It plays the original file instead of a browser stream, and it keeps working when Stash runs in Docker on a NAS.**
 
-Supports:
+## What this plugin does
 
-- Local media player launching
-- Remote protocol launching (recommended for Docker, Unraid, NAS, and remote Stash installations)
-- Path mapping between Stash paths and SMB/network paths
-- Optional play count incrementing
+Every scene page gets an **Open in external player** button in its toolbar. One click sends that scene's real file path to your desktop media player.
 
----
+- **One click, always there** — the button sits in the scene toolbar next to the play-count control, on any scene page, without first opening the *Files* tab.
+- **Any player** — anything that accepts "executable + file path" on the command line: VLC, MPV, MPC-HC/BE, SMPlayer, PotPlayer, … You only provide the full path to the player's executable.
+- **Local mode** — Stash and the player run on the same computer: the Stash server launches the player itself.
+- **Remote mode** — Stash runs in Docker / Unraid / NAS / on another machine: the browser hands a `stashopenmediaplayerremote://` link to a small helper installed on your desktop, and the helper launches the player locally. The server never needs access to your desktop.
+- **Path mapping** — rewrite container paths into real ones, e.g. `/data` → `//NAS/stash`.
+- **Path style per player** — send a `file://` URL or a native path; detected per player (VLC vs. MPC), or forced with `keep` / `remove`.
+- **Optional play count** — count an external open as a play.
 
-# Add the source
+### Why use an external player at all?
 
-Add the following package source to Stash:
+Stash's built-in player has to transcode or rely on browser codecs: heavy on the CPU, weak on ASS subtitles and HDR. A desktop player opens the original file with hardware decoding, subtitle and audio-track switching, HDR and keyboard shortcuts — and it takes the transcoding load off the Stash server.
+
+## Install
+
+1. Add this package source in **Settings → Plugins → Available → Add source**:
 
 ```text
 Name:
@@ -64,134 +47,61 @@ URL:
 https://raw.githubusercontent.com/bslnssb/stashOpenMediaPlayerRemote/refs/heads/main/index.yml
 ```
 
+![Adding the package source](images/add-source.jpg)
 
-![alt text](images/add-source.jpg)
+2. Install **Stash Open Media Player Remote** from that source.
 
----
+![Installing the plugin](images/install-plugin.jpg)
 
-# Install the plugin
+3. Open the plugin settings and set **Media Player Path** to the full path of your player, for example `C:\Program Files\SMPlayer\smplayer.exe`.
+4. Remote mode only: enable **Use Remote Protocol Handler** and run the helper on the computer that has the player (see below).
+5. Reload Stash in the browser with <kbd>Ctrl</kbd>+<kbd>F5</kbd>.
 
-Install **Stash Open Media Player Remote** from the package source.
+## Settings
 
-![alt text](images/install-plugin.jpg)
+| Setting | What it does |
+|---|---|
+| **Media Player Path** | Full path to the player executable, e.g. `C:\Program Files\SMPlayer\smplayer.exe` |
+| **File URL Prefix Mode** | `auto` (default: VLC gets `file://`, MPC gets a native path), `keep` (always `file://`), `remove` (always native path) |
+| **Use Remote Protocol Handler** | Turn on for Docker / Unraid / NAS / remote Stash: the browser launches the local helper instead of the server |
+| **Path Mapping From / To** | Optional prefix rewrite, e.g. `/data` → `//NAS/stash` |
+| **Increment Play Count** | Add one play when the scene is opened externally |
 
----
+![Plugin configuration](images/plugin-config.jpg)
 
-# Install the protocol handler (Remote Mode)
+## Remote mode (Docker, Unraid, NAS)
 
-If Stash is running on:
-
-- Docker
-- Unraid
-- NAS
-- Another machine
-
-then enable **Use Remote Protocol Handler** and install the helper script on the computer where the media player is installed.
-
-Navigate to the plugin folder and run:
+The browser opens `stashopenmediaplayerremote://open?player=...&path=...`, which starts the player on your own machine. Install the helper once on every desktop that should play media:
 
 ```bash
 python install-stashOpenMediaPlayerRemote.py
 ```
 
-![alt text](images/install-protocol.jpg)
+The script registers the protocol in the Windows registry, or as a Linux `.desktop` handler via `xdg-mime`. No administrator rights are needed on Windows.
 
----
+![Installing the protocol handler](images/install-protocol.jpg)
 
-# Example configuration
+Accept the browser's permission prompt the first time you click the button.
 
-## Remote Setup (Recommended)
+## Troubleshooting
 
-```text
-Media Player Path:
-C:\Program Files\SMPlayer\smplayer.exe
+### The media file is not found
 
-Use Remote Protocol Handler:
-Enabled
+Check that:
 
-Path Mapping From:
-/data
+- **Path Mapping From** matches the path Stash stores (the path shown on the scene page).
+- **Path Mapping To** points to a share this computer can really open.
+- The file opens from Windows Explorer / your file manager when you paste the mapped path.
 
-Path Mapping To:
-//network_path/stash
+Example: `/data` → `//network_path/stash`
 
-Increment Play Count:
-Enabled
-```
+### The button does not appear
 
-![alt text](images/plugin-config.jpg)
+Reload Stash after installing or updating the plugin. If it still does not show up, open **Settings → Plugins** and reload the plugins. Both the page and the plugin list must be refreshed after an update.
 
-## Local Mode
+### Suppress the Chromium protocol prompt (optional)
 
-Stash launches the media player directly.
-
-Recommended only when Stash and the media player are running on the same machine.
-
-## Remote Mode
-
-The browser launches:
-
-```text
-stashopenmediaplayerremote://
-```
-
-which starts the configured media player on your local computer. 
-
-Make sure to accept the permission prompt in your browser the first time you click the "open with external player" button.
-
-This mode is recommended for:
-
-- Docker
-- Unraid
-- NAS
-- Remote servers
-
----
-
-# Troubleshooting
-
-## Media file not found
-
-Verify that:
-
-- Path Mapping From matches the Stash file path.
-- Path Mapping To points to a valid SMB/network share.
-- The media file can be opened manually from Windows Explorer.
-
-Example:
-
-```text
-/data
-```
-
-→
-
-```text
-//network_path/stash
-```
-
-## Button does not appear
-
-Refresh Stash after installing or updating the plugin.
-
-If the issue persists, reload plugins from Settings → Plugins.
-
-## Optional: Suppress Chromium-Based Browser Launch Prompts
-
-Chromium-based browsers may display a confirmation dialog every time the
-`stashopenmediaplayerremote://` protocol is launched.
-
-This can be suppressed using the `AutoLaunchProtocolsFromOrigins` browser policy.
-
-### Policy Value
-
-Create a string value named:
-
-```text
-AutoLaunchProtocolsFromOrigins
-```
-
-with the following JSON:
+Chromium-based browsers ask for confirmation every time a `stashopenmediaplayerremote://` link is opened. You can allow it permanently with the `AutoLaunchProtocolsFromOrigins` policy:
 
 ```json
 [
@@ -204,58 +114,47 @@ with the following JSON:
 ]
 ```
 
-### Windows Registry Locations
+Create a string value named `AutoLaunchProtocolsFromOrigins` with that JSON under the policy key of your browser:
 
-Create the `AutoLaunchProtocolsFromOrigins` value in the appropriate location
-for your browser:
+| Browser | Registry key (Windows) | Policy page |
+|---|---|---|
+| Chromium | `HKEY_CURRENT_USER\Software\Policies\Chromium` | `chrome://policy` |
+| Google Chrome | `HKEY_CURRENT_USER\Software\Policies\Google\Chrome` | `chrome://policy` |
+| Microsoft Edge | `HKEY_CURRENT_USER\Software\Policies\Microsoft\Edge` | `edge://policy` |
+| Vivaldi | `HKEY_CURRENT_USER\Software\Policies\Vivaldi` | `vivaldi://policy` |
+| Brave | `HKEY_CURRENT_USER\Software\Policies\BraveSoftware\Brave` | `brave://policy` |
 
-#### Chromium
+Restart the browser and check that the policy shows as **Set**. Portable browser builds may ignore system policies, and this is entirely optional.
 
-```text
-HKEY_CURRENT_USER\Software\Policies\Chromium
-```
+## What this fork changes (vs. upstream v1.0.2)
 
-#### Google Chrome
+This repository is an **unofficial fork**. The plugin above is the original work of [MrArgparse](https://github.com/MrArgparse/stashOpenMediaPlayerRemote); this fork keeps it installable and fixes defects that broke it on Windows with non-ASCII paths.
 
-```text
-HKEY_CURRENT_USER\Software\Policies\Google\Chrome
-```
+- **Non-ASCII path crash (main fix)** — Stash sends valid UTF-8 JSON to the plugin, but Python on Windows decoded it with the ANSI code page (cp936 / cp932 / cp949 / cp1251 …). Non-ASCII characters were mangled and one backslash of a `\\` pair was swallowed, so `json.loads` raised `Invalid \escape`, the task exited with code 1, and the player never started. The backend now reads the raw bytes with `sys.stdin.buffer.read().decode("utf-8")`.
+- **Silent button failures** — the scene path is fetched through the same-origin GraphQL query `findScene(id){files{path}}` instead of scraping the *Files* tab; the DOM/XPath path is only a fallback. Configuration-query errors no longer kill the click handler silently.
+- **Button that disappears** — injected into `.scene-toolbar` and re-attached by a `MutationObserver`, so it survives SPA navigation and toolbar re-renders.
+- **Visible errors** — every failure shows a toast (or an alert) with the reason, instead of "nothing happens".
+- **No credential spill** — the plugin log no longer dumps `server_connection`, which contained the session cookie and ApiKey.
+- **Distribution hygiene** — fixed mtime + reproducible zip, `index.yml` hash-bound to the package, integrity self-check, and 13-language notes.
 
-#### Microsoft Edge
+Upstream-ready patches (no CJK-only changes) are in [patches/](patches/); licensing and attribution are in [NOTICE.md](NOTICE.md). If the upstream repository ships the fix, switch back to its package source.
 
-```text
-HKEY_CURRENT_USER\Software\Policies\Microsoft\Edge
-```
+## Compatibility
 
-#### Vivaldi
+- Tested with **Stash v0.31.1** on Windows 11 (Chrome / Edge). The plugin uses the standard `PluginApi` and a `raw` task, so recent Stash versions should work.
+- The protocol helper installs on **Windows** (registry) and **Linux** (`xdg-mime`). On macOS, local mode works but the protocol helper is not installed by the script yet.
+- Docker / Unraid / NAS setups need **remote mode** plus path mapping; the plugin cannot launch a player inside the container.
 
-```text
-HKEY_CURRENT_USER\Software\Policies\Vivaldi
-```
+## Documentation
 
-#### Brave
+- [Postmortem](docs/POSTMORTEM.md) — root cause, failure timeline, layered cause table, requirement pool.
+- [Architecture](docs/ARCHITECTURE.md) — module map, runtime / distribution / gate flows, contracts.
+- [Tasks](docs/TASKS.md) — WBS, dependency graph, release checklist.
+- [Evidence](docs/EVIDENCE.md) — reproduction steps and captured proof.
+- [Notes in 13 languages](docs/i18n.md) — translated summaries of the fix.
 
-```text
-HKEY_CURRENT_USER\Software\Policies\BraveSoftware\Brave
-```
+These documents are derived views; `index.yml` plus the integrity check are the source of truth.
 
-### Verify The Policy
+## License and credit
 
-Restart the browser and visit its policy page:
-
-| Browser | Policy Page |
-|----------|------------|
-| Chromium | `chrome://policy` |
-| Google Chrome | `chrome://policy` |
-| Microsoft Edge | `edge://policy` |
-| Vivaldi | `vivaldi://policy` |
-| Brave | `brave://policy` |
-
-The `AutoLaunchProtocolsFromOrigins` policy should appear as **Set**.
-
-### Notes
-
-- This is optional.
-- This only affects the specified browser.
-- Portable browser versions may ignore system policies.
-- Browser updates may change policy behaviour in the future.
+Original plugin: **MrArgparse** — <https://github.com/MrArgparse/stashOpenMediaPlayerRemote>. The upstream repository has no `LICENSE` file, so no license is granted or implied for upstream code; this fork does not relicense it. New material in this fork is offered under CC0 1.0. See [NOTICE.md](NOTICE.md).

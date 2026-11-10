@@ -32,9 +32,10 @@ code changes listed in `patches/`). To the extent that these contributions can
 be licensed independently of the upstream files they modify, they are offered
 under **CC0 1.0 Universal** (public domain dedication):
 
-* `README.zh-CN.md`, `NOTICE.md`, `docs/EVIDENCE.md`, `patches/*.patch`,
-  `patches/README.md`;
-* the top banner added to `README.md`;
+* `NOTICE.md`, `docs/*.md`, `patches/*.patch`, `patches/README.md`;
+* the 14 localized `README.md` / `README.<lang>.md` files, including their
+  language switcher, feature overview, settings table and troubleshooting
+  sections (the plugin behaviour they describe is the original plugin's);
 * the new functions and comments added to `stashOpenMediaPlayerRemote.py` and
   `stashOpenMediaPlayerRemote.js` as shown in the patches.
 
